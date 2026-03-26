@@ -67,9 +67,9 @@ async function start() {
     await connectDB();
     await connectRedis();
     await startAgentScheduler();
-    app.listen(PORT, () => {
-      logger.info(`🚀 JobPilot AI server running on http://localhost:${PORT}`);
-    });
+    app.listen(PORT, '0.0.0.0', () => {
+  logger.info(`🚀 JobPilot AI server running on port ${PORT}`);
+});
   } catch (err) {
     logger.error('Failed to start server:', err);
     process.exit(1);
