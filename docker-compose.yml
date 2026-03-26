@@ -1,0 +1,62 @@
+version: '3.9'
+
+services:
+  # ── MongoDB ───────────────────────────────────────────────────────────
+  mongo:
+    image: mongo:7
+    container_name: jobpilot-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: jobpilot
+    networks: [jobpilot]
+
+  # ── Redis ─────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: jobpilot-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks: [jobpilot]
+
+  # ── Backend API ───────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: jobpilot-backend
+    restart: unless-stopped
+    env_file: ./backend/.env
+    environment:
+      NODE_ENV: production
+      MONGODB_URI: mongodb://mongo:27017/jobpilot
+      REDIS_URL: redis://redis:6379
+      FRONTEND_URL: http://localhost:3000
+    ports:
+      - "4000:4000"
+    depends_on: [mongo, redis]
+    volumes:
+      - ./backend/logs:/app/logs
+    networks: [jobpilot]
+
+  # ── Frontend (built, served by nginx) ────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: jobpilot-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on: [backend]
+    networks: [jobpilot]
+
+volumes:
+  mongo_data:
+  redis_data:
+
+networks:
+  jobpilot:
+    driver: bridge

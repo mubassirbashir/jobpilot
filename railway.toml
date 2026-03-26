@@ -1,0 +1,25 @@
+# railway.toml — Deploy JobPilot AI to Railway in one click
+# https://railway.app
+
+[build]
+builder = "nixpacks"
+
+[[services]]
+name = "backend"
+source = "backend"
+
+[services.build]
+buildCommand = "npm install"
+startCommand = "npm start"
+
+[services.variables]
+NODE_ENV = "production"
+PORT = "4000"
+
+[[services]]
+name = "frontend"
+source = "frontend"
+
+[services.build]
+buildCommand = "npm install && npm run build"
+startCommand = "npx serve dist -p 3000"

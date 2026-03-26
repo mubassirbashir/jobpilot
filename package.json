@@ -1,0 +1,15 @@
+{
+  "name": "jobpilot-ai",
+  "version": "1.0.0",
+  "description": "AI-powered autonomous job hunting platform — LinkedIn + Claude",
+  "private": true,
+  "workspaces": ["backend", "frontend"],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
+    "build": "npm run build --workspace=frontend && npm run build --workspace=backend",
+    "start": "npm run start --workspace=backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
