@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { auth as authApi, dashboard as dashApi, agent as agentApi } from '../services/api.js';
+import { auth as authApi, dashboard as dashApi, agent as agentApi } from './services/api.js';
 
 export const useStore = create((set, get) => ({
   // ── Auth ─────────────────────────────────────────────────────────────
